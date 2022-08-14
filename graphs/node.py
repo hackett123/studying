@@ -18,7 +18,7 @@ class Node():
         self.id = id
 
     def get_neighbors(self):
-        return self.neighbors
+        return self.neighbors.keys()
 
     
     def add_edge(self, other_node):

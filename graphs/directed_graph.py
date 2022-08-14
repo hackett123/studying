@@ -31,6 +31,7 @@ class DirectedGraph(Graph):
         assert(from_id in self.vertices.keys())
         assert(to_id in self.vertices.keys())
         self.edges.add((from_id, to_id))
+        self.vertices[from_id].add_edge(self.vertices[to_id])
 
     def add_edges(self, *edges):
         for (from_id, to_id) in edges:
@@ -53,6 +54,10 @@ class DirectedGraph(Graph):
 
     def has_edge(self, from_id, to_id):
         return (from_id, to_id) in self.edges
+
+    def neighbors(self, id):
+        assert(self.has_vertex(id))
+        return sorted(self.vertices[id].get_neighbors())
 
     def cardinality(self):
         return len(vertices)

@@ -10,6 +10,7 @@ This interface consists of the following methods:
     - remove_edge(from, to)
     - has_vertex(id)
     - has_edge(from, to)
+    - neighbors(id)
     - cardinality() -> # of vertices
     - density() -> # of edges
 '''
@@ -38,6 +39,9 @@ class Graph:
         raise NotImplementedError("Missing implementation!")
 
     def has_edge(self, from_id, to_id):
+        raise NotImplementedError("Missing implementation!")
+
+    def neighbors(self, id):
         raise NotImplementedError("Missing implementation!")
 
     def cardinality(self):

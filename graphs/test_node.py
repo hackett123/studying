@@ -48,7 +48,7 @@ class TestHasNeighbor(unittest.TestCase):
 
 class TestCardinality(unittest.TestCase):
     def testEmpty(self):
-        self.assertEquals(0, Node(5).cardinality())
+        self.assertEqual(0, Node(5).cardinality())
     def testNonEmpty(self):
         node, node2 = Node(5), Node(10)
         node.add_edge(node2)
