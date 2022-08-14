@@ -6,8 +6,8 @@ BFS, or Breadth First Search, is a fundamental graph traverse algorithm. The alg
 
 
 Our implementation reads a bit complicated because we track a depth field as well and put the output
-list as a tuple of (depth, node) instead of just a list of nodes. We do this on purpose to solve the
-shortest path problem, whwch we will do next.
+list as a tuple of (depth, node, parent_node) instead of just a list of nodes. We do this on purpose to solve the
+shortest path problem, which we will do next.
 '''
 
 from graph import Graph
@@ -19,7 +19,7 @@ class BreadthFirstSearch():
         '''
         Delegate computation to recursive helper
         '''
-        visited = [(0, starting_node)]
+        visited = [(0, starting_node, None)]
         return BreadthFirstSearch._traverse(g, starting_node, visited, 1)
 
     @staticmethod
@@ -35,8 +35,8 @@ class BreadthFirstSearch():
         '''
         to_visit = []
         for neighbor in g.neighbors(u):
-            if neighbor not in [node_id for (depth, node_id) in visited]:
-                visited.append((depth, neighbor))
+            if neighbor not in [node_id for (depth, node_id, parent_id) in visited]:
+                visited.append((depth, neighbor, u))
                 to_visit.append(neighbor)
         for v in to_visit:
             BreadthFirstSearch._traverse(g, v, visited, depth + 1)

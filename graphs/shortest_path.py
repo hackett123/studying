@@ -14,27 +14,47 @@ The algorithm is as follows:
     - Assume for sake of contradiction that there exists a shorter path (u, ..., v) in G.
     - bfs proceeds in a "search party" fashion, expanding out in a ring, going one step deeper each iteration
     - If there exists a shorter path (u, ..., v) in G, then the search would have discovered v earlier.
-
-Our output returns the length only.
-
-One can imagine an implementation which also returns the path (u, ..., v). We will do that separately. But to do so, we would make the
-following modifications to our algorithm for bfs:
-    - bfs currently returns a list of tuples (depth, node). There is no way to tell what parent a node was recursed into from. In order
-    to also return paths themselves, we need to have the tuple expanded to (depth, node, parent). Then, given a bfs output [(depth1, node1, parent1),
-    (depth2, node2, parent2), ...] we can recursively find the parent of v until we encounter u.
 '''
 from bfs import BreadthFirstSearch
 
-class ShortestPath():
 
-    @staticmethod
-    def find_shortest_path(g, u, v):
-        bfs_traversal = BreadthFirstSearch.traverse(g, u)
-        node_ids = [node for (depth, node) in bfs_traversal]
-        contains_target = v in node_ids
-        if not contains_target:
-            raise Exception(f'Node {v} is not reachable from node {u} in the graph provided.')
-        for (depth, node) in bfs_traversal:
-            if node == v:
-                return depth
-            
+def find_shortest_path(g, u, v):
+    bfs_traversal = BreadthFirstSearch.traverse(g, u)
+    node_ids = [node for (depth, node, parent) in bfs_traversal]
+    contains_target = v in node_ids
+    if not contains_target:
+        raise Exception(f'Node {v} is not reachable from node {u} in the graph provided.')
+
+    depth = -1
+    for (_depth, node, parent) in bfs_traversal:
+        if node == v:
+            depth = _depth
+    path = find_path_back_to_u(bfs_traversal, v, u)
+    return (depth, path[::-1])
+
+def find_path_back_to_u(bfs_traversal, v, u):
+    '''
+    Example of this input could be the graph G=(V,E) where V = {1, 2, 3, 4, 5} and E = {(1, 2), (2, 3), (3, 4), (2, 4)}
+
+    If we consider the bfs traversal for bfs(g, 1, 4), we would get the output:
+        [(0, 1, None), (1, 2, 1), (2, 3, 2), (2, 4, 2)]
+
+    If we want to find the path back to u, we would want to see the output as 4 -> 2 -> 1.
+    '''
+    return recursive_find_path_back_to_u(bfs_traversal, v, u, [])
+
+def recursive_find_path_back_to_u(bfs_traversal, v, u, path):
+    '''
+        - Base case: v == u -> return v
+        - Recursive case: return v + find_path_back_to_u(g, parent, u)
+    '''
+    if v == u:
+        return path + [u]
+    
+    parent = None
+    for (depth, node, _parent) in bfs_traversal:
+        if node == v:
+            parent = _parent
+    
+    return recursive_find_path_back_to_u(bfs_traversal, parent, u, path + [v])
+    
